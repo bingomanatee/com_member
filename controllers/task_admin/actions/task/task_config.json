@@ -1,0 +1,29 @@
+{
+
+
+    "get_route": "*s",
+
+
+
+    "static":[
+        {
+            "name":"member_task_admin_js",
+            "path":"js",
+            "prefix":"/js/admin/member_task"
+        }
+    ],
+
+    "javascript":[
+        {
+            "/js/libs":[
+                "underscore/underscore-min.js",
+                "backbone/backbone.js",
+                "handlebars/handlebars-1.0.0.beta.6.js"
+            ]
+        },
+        "/js/util/hbh.js",
+        "/js/util/handlebar_options.js",
+        "/js/admin/member_task/task.js"
+
+    ]
+}

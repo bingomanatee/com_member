@@ -1,0 +1,6 @@
+{
+    "method":"get",
+
+    "route":"/mld/:service/:id"
+
+}

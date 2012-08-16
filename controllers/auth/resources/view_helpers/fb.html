@@ -1,0 +1,84 @@
+<script language="javascript">
+    $(function () {
+        var root = $('#fb-root');
+        if ((!root) || (!root.length)) {
+            $('body').append('<div id="fb-root"></div>');
+        }
+        window.fbAsyncInit = function () {
+            // console.log('fbAsyncInit');
+            FB.init({
+                appId:'<%= fb_app_id %>', // App ID
+                channelUrl:'http://<%= fb_domain %>/channel.html', // Channel File
+                status:true, // check login status
+                cookie:true, // enable cookies to allow the server to access the session
+                xfbml:true  // parse XFBML
+            });
+
+            $('body').trigger('fb');
+        };
+        // Load the SDK Asynchronously
+        (function (d) {
+            var head = $("head").get(0);  // using jquery
+            var script2 = document.createElement("script");
+            script2.innerHTML = "window.FB = null;FB=null;";
+            head.appendChild(script2);
+
+
+            var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+            if (d.getElementById(id)) {
+                return;
+            }
+            js = d.createElement('script');
+            js.id = id;
+            js.async = true;
+            js.src = "//connect.facebook.net/en_US/all.js";
+            ref.parentNode.insertBefore(js, ref);
+        }(document));
+    })
+
+    function get_local_data(res) {
+
+        // console.log('get_local_data(', res, ')');
+
+        function call_local_data(res) {
+            if (res && res.authResponse) {
+                $.getJSON('/mld/facebook/' + res.authResponse.userID, function (data) {
+                    $('body').trigger('local_user', data);
+                });
+            } else {
+
+                $.getJSON('/mld/facebook/0', function (data) {
+                    $('body').trigger('local_user', false);
+                });
+            }
+        }
+
+        var ld = getCookie('local_neb_user');
+
+        // console.log('local data in cookie: ', ld);
+        if (ld) {
+            if (ld.fbid != res.id) {
+                call_local_data(res);
+            } else {
+                $('body').trigger('local_user', ld);
+            }
+        } else {
+            call_local_data(res);
+        }
+    }
+
+    function getCookie(c_name) {
+        if (document.cookie.length > 0) {
+            var c_start = document.cookie.indexOf(c_name + "=");
+            if (c_start != -1) {
+                c_start = c_start + c_name.length + 1;
+                c_end = document.cookie.indexOf(";", c_start);
+                if (c_end == -1) c_end = document.cookie.length;
+                return decodeURI(document.cookie.substring(c_start, c_end));
+            }
+        }
+        return "";
+    }
+
+
+</script>

@@ -1,0 +1,92 @@
+<h1>Tasks</h1>
+
+<div id="task_list">
+    <table class="datagrid" style="width: 100%">
+        <thead>
+        <tr>
+            <td colspan="109" class="controls">
+                Search <input type="text" value="" class="search_field"/>
+            </td>
+        </tr>
+        <tr>
+            <th style="4em"><input type="checkbox" name="tasks[]" class="check_all" value="all"/></th>
+            <th class="id_sort">Name</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody class="insert">
+        <script id="task_row_template" type="text/x-handlebars-template">
+            <td class="checkbox"><input type="checkbox" name="tasks[]" value="{{ _id }}"/></td>
+            <td>
+                {{ name }}
+            </td>
+            <td class="control">
+                <button class="edit"><span class="icon"></span> Edit</button>
+            </td>
+
+        </script>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th><input type="checkbox" name="tasks[]" class="check_all" value="all"/></th>
+            <th class="id_sort">Name</th>
+            <th>&nbsp;</th>
+        </tr>
+        <tr>
+            <td colspan="10" class="controls">
+                <button class="checked">Alter Checked Items...</button>
+
+                <button class="add">Add Task</button>
+                <div class="on_checked" style="display: none">
+                    <button class="delete">Delete</button>
+                </div>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+<p>Note - although this page provides the abilityy to create tasks for ease of development,
+    all tasks should be defined in the tasks property of component's configuration files
+    for integrity of module definition. </p>
+<script id="add-task-template" type="text/x-handlebars-template">
+    <form class="dialog_form">
+
+        <table>
+            <tr>
+                <td><label> Name</label></td>
+                <td><input name="name" type="text" value=""/></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+                    <button class="new">Add Task</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</script>
+
+<script id="edit-task-template" type="text/x-handlebars-template">
+    <form class="dialog_form">
+
+        <table>
+            <tr>
+                <td><label> Name</label></td>
+                <td><input name="name" type="text" value="{{ name }}"/></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+                    <button class="update">Update</button>
+                    <button class="delete">Delete</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</script>
+
+<span id="add_task">
+</span>
+
+<span id="edit_task">
+</span>

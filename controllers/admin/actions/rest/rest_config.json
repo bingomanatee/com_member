@@ -1,0 +1,6 @@
+{
+    "method": "*",
+    "get_route": "*",
+    "post_route": "*",
+    "put_route": "*/:_id"
+}

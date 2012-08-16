@@ -1,0 +1,29 @@
+{
+    "method":"get",
+
+    "get_route":"*s",
+
+    "static":[
+        {
+            "name":"member_admin_js",
+            "path":"js",
+            "prefix":"/js/admin/member"
+        }
+    ],
+
+
+    "javascript":[
+        {
+            "/js/libs":[
+                "underscore/underscore-min.js",
+                "backbone/backbone.js",
+                "handlebars/handlebars-1.0.0.beta.6.js"
+            ]
+        },
+        "/js/util/hbh.js",
+        "/js/util/handlebar_options.js",
+        "/js/admin/member/member.js"
+
+    ]
+
+}
