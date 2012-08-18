@@ -25,7 +25,7 @@
                 "handlebars/handlebars-1.0.0.beta.6.js"
             ]
         },
-        "/js/util/hbh.js",
+        "/js/util/utils.js",
         "/js/util/handlebar_options.js",
         "/js/admin/member_role/role.js"
 

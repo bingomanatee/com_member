@@ -52,7 +52,7 @@
         <tr>
             <th><input type="checkbox" name="members[]" class="check_all" value="all"/></th>
             <th class="id_sort">ID</th>
-            <th class="user_name_sort">User Name</th>
+            <th class="member_name_sort">User Name</th>
             <th class="link_sort">Real Name</th>
             <th class="parent_sort">Role</th>
             <th>&nbsp;</th>
@@ -65,7 +65,7 @@
                 <a href="#" title="{{id_display _id }}">{{id_short _id }} </a>
             </td>
             <td>
-                {{ user_name }}
+                {{ member_name }}
             </td>
             <td>{{ real_name }}</td>
             <td>--</td>
@@ -80,7 +80,7 @@
         <tr>
             <th>&nbsp;</th>
             <th class="id_sort">ID</th>
-            <th class="user_name_sort">User Name</th>
+            <th class="member_name_sort">User Name</th>
             <th class="link_sort">Real Name</th>
             <th class="parent_sort">Role</th>
             <th>&nbsp;</th>
@@ -105,7 +105,7 @@
         <table>
             <tr>
                 <td><label>User Name</label></td>
-                <td><input name="user_name" type="text" value=""/></td>
+                <td><input name="member_name" type="text" value=""/></td>
             </tr>
             <tr>
                 <td><label>Real Name</label></td>
@@ -130,7 +130,7 @@
         <table style="width: 100%">
             <tr>
                 <td><label>User Name</label></td>
-                <td><input name="user_name" type="text" value="{{ user_name }}"/></td>
+                <td><input name="member_name" type="text" value="{{ member_name }}"/></td>
             </tr>
             <tr>
                 <td><label>Real Name</label></td>

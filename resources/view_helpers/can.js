@@ -5,6 +5,7 @@ var _DEBUG = false;
 
 var _can_view = new NE.helpers.View({
     name:'member_can',
+
     init:function (rs, input, cb) {
         if (_DEBUG) console.log('INIT CAN');
 

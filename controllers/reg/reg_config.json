@@ -1,4 +1,3 @@
 {
-    "layout_name": "ne_blog",
-    "route_prefix": "/member_reg"
+    "route_prefix": "/member"
 }

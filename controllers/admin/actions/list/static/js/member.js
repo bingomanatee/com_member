@@ -10,7 +10,7 @@ $(function () {
 
     MEMBER_API.Member_Model = Backbone.Model.extend({
         defaults:{
-            user_name:'',
+            member_name:'',
             real_name:'',
             email: ''
         },
@@ -70,7 +70,7 @@ $(function () {
 
         initialize:function () {
             var self = this;
-            this.comp_value = 'user_name';
+            this.comp_value = 'member_name';
             this.collection.url = REST_ROOT;
             this.collection.comparator = function (opt) {
                 return opt.get(self.comp_value);
@@ -106,7 +106,7 @@ $(function () {
         events:{
             'click button.add':'add_member',
             'click td.id_sort':'sort_by_id',
-            'click td.user_name_sort':'sort_by_name'
+            'click td.member_name_sort':'sort_by_name'
         },
 
         sort_by_id:function () {

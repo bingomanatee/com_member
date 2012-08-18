@@ -1,0 +1,78 @@
+<h1>Make Facebook test user</h1>
+<p>Note - these users are NOT automatically registered to your site!</p>
+
+<figure>
+    <h2>New test user</h2>
+
+    <form class="dialog_form" id="new_member_form">
+
+        <table>
+            <tr>
+                <th><label>Name</label></th>
+                <td><input type="text" name="name"/></td>
+            </tr>
+            <tr>
+                <th>&nbsp;</th>
+                <td>
+                    <button type="submit">Create Test User</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <h3>Result</h3>
+
+    <pre id="test_user_data"></pre>
+</figure>
+<script language="javascript">
+
+    $('#new_member_form').submit(function(){
+        var loading = false;
+
+        return function (e) {
+            if (loading){
+                return false;
+            }
+            loading = true;
+            console.log(e);
+
+            var params = $.param({
+                client_id: '<%= helpers.fb_data.app_id %>',
+                client_secret : '<%= helpers.fb_data.app_secret %>',
+                'grant_type': 'client_credentials'
+            });
+
+            $.get('https://graph.facebook.com/oauth/access_token?' + params, function(app_data){
+                console.log('app data: ', app_data)
+                var access_token = app_data.replace(/^[^=]+=/,'');
+                var data = _deserialize($(e.target).serializeArray());
+                var param = $.param({
+                    name: data.name,
+                    locale: 'en_US',
+                    permisssions: 'read_stream',
+                    method: 'post',
+                    access_token: access_token
+                })
+                var tu = 'https://graph.facebook.com/<%= helpers.fb_data.app_id %>/accounts/test-users?' + param;
+                console.log('get test user ', tu);
+                $('#test_user_data').load(tu, function(){
+                    loading = false;
+                })
+
+            });
+
+            return false;
+            /**
+             * https://graph.facebook.com/APP_ID/accounts/test-users?
+             installed=true
+             &name=FULL_NAME
+             &locale=en_US
+             &permissions=read_stream
+             &method=post
+             &access_token=APP_ACCESS_TOKEN
+             */
+        };
+
+    }())
+
+</script>

@@ -1,0 +1,11 @@
+{
+
+    "static":[
+        {
+            "name":"member_support_js",
+            "prefix":"/js/member_support/",
+            "path":"js"
+        }
+    ]
+
+}

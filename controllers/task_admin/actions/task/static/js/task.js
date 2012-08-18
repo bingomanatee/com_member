@@ -103,7 +103,7 @@ $(function () {
         events:{
             'click button.add':'add_task',
             'click td.id_sort':'sort_by_id',
-            'click td.user_name_sort':'sort_by_name'
+            'click td.member_name_sort':'sort_by_name'
         },
 
         sort_by_id:function () {

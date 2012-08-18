@@ -1,0 +1,6 @@
+{
+    "method":"get",
+
+    "route":"/member_from_oauth/:service/:id"
+
+}

@@ -1,0 +1,18 @@
+<html>
+<head>
+    <script type="text/javascript" src="/js/member_support/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/member_support/c_member.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+    $(function () {
+        var to = setTimeout(function () {
+            document.location = "/?error=cannot load user";
+        }, 1000);
+        NE_MEMBER.set_local_member( <%= JSON.stringify(member) %>);
+        clearTimeout(to);
+    })
+</script>
+</body>
+
+</html>

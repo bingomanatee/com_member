@@ -58,14 +58,18 @@ module.exports = {
                 return memo;
             }, tasks);
             delete action_tasks
-            console.log('%s: tasks after %s = %s ....', i, action.path, util.inspect(tasks));
+           if (_DEBUG_OPTIONS){
+               console.log('%s: tasks after %s = %s ....', i, action.path, util.inspect(tasks));
+           }
 
         })
 
         tasks = _.keys(tasks);
         tasks = _.sortBy(tasks, _.identity);
 
+        if (_DEBUG_OPTIONS){
         console.log('action tasks: %s', tasks.join(','));
+        }
 
         tasks_model.active(function(err, mtasks){
             var task_names = _.map(mtasks, function(mtask){
@@ -79,10 +83,13 @@ module.exports = {
             if (unsaved_tasks.length < 1){
                 return cb();
             }
+
+            if (_DEBUG_OPTIONS){
             console.log('config tasks: %s', tasks.join(','));
             console.log('saved tasks: %s', task_names.join(','));
             console.log('tasks not in config: %s', tasks_not_in_config.join(','));
             console.log('unsaved_tasks: %s', unsaved_tasks.join(','));
+            }
             var new_tasks = _.map(unsaved_tasks, function(t){
                 return {name: t};
             })

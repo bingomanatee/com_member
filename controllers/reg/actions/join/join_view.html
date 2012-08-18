@@ -1,0 +1,106 @@
+<form class="join_form" method="post" action="/join_us" id="join">
+    <% if (helpers.branding){ %>
+    <h1>Join &quot;<%= helpers.branding.site_name %>&quot;</h1>
+    <% } else { %>
+    <h1>Join us!</h1>
+    <% } %>
+    <input type="hidden" name="facebook_data"/>
+    <table>
+        <tr>
+            <th>User Name</th>
+            <td><input type="text" name="name"/></td>
+        </tr>
+        <tr>
+            <th>Real Name</th>
+            <td><input type="text" name="real_name"/><br/>
+                <small>Optional</small>
+            </td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td><input type="text" name="email"/><br/>
+                <small>Optional*</small>
+            </td>
+        </tr>
+        <tr class="password">
+            <th>Password</th>
+            <td><input type="password" name="password"/></td>
+        </tr>
+        <tr class="password">
+            <th>Password - again</th>
+            <td><input type="password" name="password2"/></td>
+        </tr>
+        <tr>
+            <th>Public Profile</th>
+            <td><textarea name="public_profile"></textarea></td>
+        </tr>
+        <tr>
+            <th>Private Profile</th>
+            <td><textarea name="private_profile"></textarea><br/>
+                <small>For the site owner (optional)</small>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <fb:login-button onlogin="NE_MEMBER.join_with_facebook()" autologoutlink="true">
+                    Join using Facebook
+                </fb:login-button>
+            </th>
+            <td>
+                <button type="submit">
+                    <% if (helpers.branding){ %>
+                    Join &quot;<%= helpers.branding.site_name %>&quot;
+                    <% } else { %>
+                    Join us!
+                    <% } %>
+                </button>
+            </td>
+        </tr>
+    </table>
+    <p>* an e-mail address helps us send reminder password messages
+        for accounts that are not attached to Facebook,
+        or for future site notifications</p>
+</form>
+
+<script language="javascript">
+    // listen for and handle auth.statusChange events
+    $(function () {
+/*
+        $('body').bind('fb', function(){
+            FB.getLoginStatus(function(){
+                FB.logout(function(res){
+                    return false;
+                });
+            })
+        }) */
+
+        NE_MEMBER.join_with_facebook = function () {
+            FB.api('/me', function (me) {
+                if (me.name) {
+                    console.log('join_with_facebook: ', me)
+                    NE_MEMBER._load_fb_to_form(me);
+                }
+            })
+        }
+
+        NE_MEMBER._load_fb_to_form = function (me) {
+            $.get('/member_from_oauth/facebook/' + me.id, function (data) {
+                if (data.member) {
+                    window.alert('You are already a member!');
+                    document.location = '/oauth_sign_in/facebook/' + me.id;
+                } else {
+                    var form = $('#join');
+                    $('input[name=facebook_data]', form).val(JSON.stringify(me));
+                    $('input[name=name]', form).val(me.name);
+                    $('input[name=real_name]', form).val(me.name);
+                    $('input[name=password]', form).val('facebook');
+                    $('input[name=password]', form).val('facebook');
+                    $('.password', form).hide();
+                    form.submit();
+                }
+            });
+        }
+
+    })
+
+</script>

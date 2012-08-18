@@ -1,0 +1,7 @@
+{
+
+    "method": "get",
+
+    "get_route": "/sign_out"
+
+}

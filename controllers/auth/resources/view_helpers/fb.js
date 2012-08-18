@@ -45,8 +45,6 @@ module.exports = {
                     fb_member_meta_fields:fb_member_meta_fields,
                     fb_domain:fb_domain
                 })
-
-                return "foo";
             }
             cb();
         }
