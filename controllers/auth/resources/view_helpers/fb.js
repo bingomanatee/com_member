@@ -50,8 +50,8 @@ module.exports = {
         }
         if (!fb_app_id) {
             rs.action.models.cc_options.find({
-                    src:"membership",
-                    class:"COMPONENT"
+                    src:"auth",
+                    class:"CONTROLLER"
                 },
                 function (err, opts) {
                     opts.forEach(function (opt) {
