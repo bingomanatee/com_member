@@ -11,5 +11,16 @@
 
     "javascript": [
         "/js/util/utils.js"
+    ],
+
+    "cloak_member_id_in_session": false,
+
+    "options": [
+        {
+            "name":"member_password_min_length",
+            "data_type":"number",
+            "default": 6,
+            "notes":"the minimum size of an acceptable password"
+        }
     ]
 }

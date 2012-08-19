@@ -91,18 +91,19 @@ module.exports = {
         full_member.time = new Date().getTime();
 
         var privs = _privs(full_member);
+        full_member.privs = privs;
 
         rs.set_session('member', full_member);
     },
 
     on_process:function (rs, member) {
         var self = this;
+        this._session_member(rs, member);
 
-        var privs = _privs(member);
         var shared_member = member.toJSON();
         shared_member.time = new Date().getTime();
-        shared_member.privs = privs;
-        delete shared_member._id;
+        shared_member.privs =  _privs(member);;
+        if (this.get_config('cloak_member_id_in_session')) delete shared_member._id;
 
         rs.send({member: shared_member});
     },

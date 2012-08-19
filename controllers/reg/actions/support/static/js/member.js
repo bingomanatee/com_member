@@ -51,7 +51,6 @@ var _DEBUG = true;
                     return ((oauth.service == service) && (oauth.id == id));
                 }) ? true : false;
             }
-
             if (_DEBUG) console.log('local member has oauth id: ' + service + '/' + id + ': ' + (out ? 'true' : 'false'))
 
             return out
@@ -88,9 +87,8 @@ var _DEBUG = true;
                 member = this.get_local_member();
             }
 
+            if (_DEBUG) console.log('triggering body with member ' + (member ? JSON.stringify(member) : 'false'));
             var body = this.get_jquery()('body');
-
-            if (_DEBUG) console.log('triggering body with member ' + (member? JSON.stringify(member) : 'false'));
             body.trigger('member', member);
         },
 
@@ -100,7 +98,7 @@ var _DEBUG = true;
         },
 
         register_oauth_user:function (service, user, cb) {
-            if (_DEBUG) console.log('registering ' + service + ' user ' + JSON.stringify(user) )
+            if (_DEBUG) console.log('registering ' + service + ' user ' + JSON.stringify(user))
             this.get_jquery().post('/add_oauth_user', {
                 service:service,
                 user:user
@@ -116,6 +114,9 @@ var _DEBUG = true;
          * @param cb: function (optional) -- recipient
          */
         get_site_member_from_oauth:function (service, id, cb) {
+            if (_DEBUG){
+                console.log('getting member from oauth %s %s', service, id);
+            }
             var url = '/member_from_oauth/' + service + '/' + id;
             this.get_jquery().get(url, cb);
         },
@@ -154,6 +155,19 @@ var _DEBUG = true;
 
         },
 
+        sign_out:function () {
+            this.unset_local_member();
+            FB.getLoginStatus(function (response) {
+                console.log('getting login status');
+
+                FB.logout(function () {
+                    console.log('signed out of facebook');
+                    document.location = '/sign_out';
+                });
+            })
+            return false;
+        },
+
         init_facebook:function () {
             //    console.log('getting login status');
             var self = this;
@@ -177,29 +191,18 @@ var _DEBUG = true;
             }
         },
 
-        get_oauth_member_from_service: function(service, id, cb){
-            switch (service){
+        get_oauth_member_from_service:function (service, id, cb) {
+            switch (service) {
                 case 'facebook':
-                    FB.api('/me',cb);
+                    FB.api('/me', cb);
                     break;
 
                 default:
                     throw new Error('cannot get auth memember from ' + service);
             }
         },
-        /**
-         *
-         FB.api('/me/picture', function (pic) {
 
-         // console.log('me: ', response, 'pic', pic);
-         response.url = pic;
-         var ut = Handlebars.compile('<div class="li_user clearfix"><img src="{{url}}" style="float: left; margin-right: 0.5em;"/' +
-         '>Welcome <br />{{name }} <br clear="all" /></div>');
-         $('#fb-user').html(ut(response));
-
-         })
-
-
+        /*
          * @param service
          * @param id
          */
@@ -211,19 +214,19 @@ var _DEBUG = true;
                 this.reflect_member();
             } else {
                 // already registered
-                this.get_site_member_from_oauth(service, id, function(data){
-                    if (data.member){
+                this.get_site_member_from_oauth(service, id, function (data) {
+                    if (data.member) {
                         self.set_local_member(data.member);
                     } else {
                         // logged in via oauth in but not registered - should be rare.
-                       self.get_oauth_member_from_service(service, id, function(user){
-                           if (user){
-                               self.register_oauth_user(service, user, function(member){
-                                   self.reflect_member(member);
-                               })
+                        self.get_oauth_member_from_service(service, id, function (user) {
+                            if (user) {
+                                self.register_oauth_user(service, user, function (member) {
+                                    self.reflect_member(member);
+                                })
 
-                           }
-                       })
+                            }
+                        })
                     }
                 });
             }
