@@ -26,7 +26,7 @@ var _can_view = new NE.helpers.View({
             input.javascript = ['/js/member_support/c_member.js'];
         }
 
-        console.log('adding usser: %s', util.inspect(input.javascript));
+      //  console.log('adding usser: %s', util.inspect(input.javascript));
         cb();
     }
 });

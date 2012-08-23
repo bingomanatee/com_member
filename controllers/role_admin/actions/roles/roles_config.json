@@ -2,20 +2,8 @@
 
 
     "method": "get",
-    
-
-
 
     "get_route": "*s",
-
-
-    "static":[
-        {
-            "name":"member_role_admin_js",
-            "path":"js",
-            "prefix":"/js/admin/member_role"
-        }
-    ],
 
     "javascript":[
         {

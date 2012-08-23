@@ -3,6 +3,7 @@ var util = require('util');
 var fs = require('fs');
 var path = require('path');
 var NE = require('nuby-express');
+var validate_admin = require('validate_admin');
 
 /* ***************** CLOSURE ************* */
 
@@ -13,6 +14,9 @@ module.exports = {
     /* *************** GET RESPONSE METHODS ************** */
 
     on_get_validate:function (rs) {
+        if (!validate_admin(rs, '', this)){
+            return;
+        }
         var self = this;
         this.on_get_input(rs);
     },

@@ -18,7 +18,7 @@ var _can_view = new NE.helpers.View({
             input.javascript = ['/js/member_support/c_member.js'];
         }
 
-        console.log('adding member js: %s', util.inspect(input.javascript));
+        if (_DEBUG) console.log('adding member js: %s', util.inspect(input.javascript));
         cb();
     }
 });

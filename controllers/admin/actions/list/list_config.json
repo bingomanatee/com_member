@@ -3,15 +3,6 @@
 
     "get_route":"*s",
 
-    "static":[
-        {
-            "name":"member_admin_js",
-            "path":"js",
-            "prefix":"/js/admin/member"
-        }
-    ],
-
-
     "javascript":[
         {
             "/js/libs":[

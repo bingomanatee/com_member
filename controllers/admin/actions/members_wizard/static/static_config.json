@@ -1,0 +1,8 @@
+{
+
+    "map":{
+        "img":"/admin/img/member/wizard",
+        "css":"/admin/css/member/wizard",
+        "js":"/admin/js/member/wizard"
+    }
+}
