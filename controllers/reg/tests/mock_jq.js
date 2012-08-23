@@ -2,7 +2,7 @@ var tap = require('tap');
 var util = require('util');
 var _ = require('underscore');
 
-var _DEBUG = true;
+var _DEBUG = false;
 
 var _jquery_methods = {
 

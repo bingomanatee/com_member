@@ -13,7 +13,7 @@ var _DEBUG = true;
         }
     }
 
-    _.extend(NE_MEMBER.prototype, {
+NE_MEMBER.prototype = {
 
         _jquery:null,
 
@@ -64,9 +64,13 @@ var _DEBUG = true;
             return cookie;
         },
 
-        set_cookie:function (member) {
+        set_cookie:function (member, source) {
             if (_.isObject(member)) {
                 member = JSON.stringify(member);
+            }
+            if (source){
+                console.log('setting source to ', source);
+                this.get_jquery().cookie('source', source, {path:'/'});
             }
             if (member) {
                 if (_DEBUG) console.log('setting cookie to ' + member);
@@ -74,26 +78,28 @@ var _DEBUG = true;
             } else {
                 if (_DEBUG) console.log('unsetting setting cookie');
                 this.get_jquery().removeCookie('member', {path:'/'});
+                this.get_jquery().removeCookie('source', {path:'/'});
             }
         },
 
-        set_local_member:function (member) {
-            this.set_cookie(member);
-            this.reflect_member(member);
+        set_local_member:function (member, source) {
+            this.set_cookie(member, source);
+            this.reflect_member(member, source);
         },
 
-        reflect_member:function (member) {
+        reflect_member:function (member, source) {
             if (arguments.length == 0) {
                 member = this.get_local_member();
             }
 
             if (_DEBUG) console.log('triggering body with member ' + (member ? JSON.stringify(member) : 'false'));
             var body = this.get_jquery()('body');
-            body.trigger('member', member);
+            body.trigger('member', member, source);
         },
 
         unset_local_member:function () {
             this.set_cookie(false);
+            this.set_source(false);
             this.reflect_member(null);
         },
 
@@ -159,11 +165,14 @@ var _DEBUG = true;
             this.unset_local_member();
             FB.getLoginStatus(function (response) {
                 console.log('getting login status');
-
-                FB.logout(function () {
-                    console.log('signed out of facebook');
-                    document.location = '/sign_out';
-                });
+                try {
+                    FB.logout(function () {
+                        console.log('signed out of facebook');
+                        document.location = '/sign_out';
+                    });
+                } catch (err){
+                }
+                this.reflect_member();
             })
             return false;
         },
@@ -177,18 +186,7 @@ var _DEBUG = true;
 
         reflect_no_oauth_user:function () {
             var member = this.get_local_member();
-
-            if (member) {
-                if (this.member_is_only_facebook(member)) {
-                    //  console.log('member is a pure facebook member - log them off')
-                    this.unset_local_member();
-                } else {
-                    this.reflect_member(member);
-                }
-            } else {
-                //  console.log('member logged off - reflect that')
-                this.reflect_member(false);
-            }
+            this.reflect_member(member);
         },
 
         get_oauth_member_from_service:function (service, id, cb) {
@@ -216,13 +214,13 @@ var _DEBUG = true;
                 // already registered
                 this.get_site_member_from_oauth(service, id, function (data) {
                     if (data.member) {
-                        self.set_local_member(data.member);
+                        self.set_local_member(data.member, service);
                     } else {
                         // logged in via oauth in but not registered - should be rare.
                         self.get_oauth_member_from_service(service, id, function (user) {
                             if (user) {
                                 self.register_oauth_user(service, user, function (member) {
-                                    self.reflect_member(member);
+                                    self.set_local_member(member, service);
                                 })
 
                             }
@@ -231,7 +229,7 @@ var _DEBUG = true;
                 });
             }
         }
-    });
+    };
 
     if (typeof module !== 'undefined') {
         module.exports = NE_MEMBER;
