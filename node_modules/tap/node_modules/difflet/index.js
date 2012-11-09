@@ -186,7 +186,7 @@ function difflet (opts, prev, next) {
         }
         else if (typeof node == 'object') {
             var insertedKey = false;
-            var deleted = insertable && typeof prevNode === 'object'
+            var deleted = insertable && prevNode && typeof prevNode === 'object'
                 ? Object.keys(prevNode).filter(function (key) {
                     return !Object.hasOwnProperty.call(node, key);
                 })

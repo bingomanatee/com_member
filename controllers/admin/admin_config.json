@@ -1,5 +1,3 @@
 {
-    "layout_name": "ne_admin",
-
-    "route_prefix": "/admin/member"
+    "layout_name": "ne_bs_admin"
 }

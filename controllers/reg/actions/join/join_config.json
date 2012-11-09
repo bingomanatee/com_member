@@ -1,8 +1,0 @@
-{
-    "method": "*",
-
-    "get_route": "/join_us",
-
-    "post_route": "/join_us"
-
-}

@@ -8,6 +8,8 @@ var _can_view = new NE.helpers.View({
     weight: 100,
 
     init:function (rs, input, cb) {
+        return cb();
+
         if (_DEBUG) console.log('INIT member_js');
 
         if (input.javascript){

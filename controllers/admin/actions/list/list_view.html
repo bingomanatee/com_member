@@ -1,162 +1,74 @@
+<% if (list){%>
+
+<%- partial(helpers.nebsavr + '/data_table.html', data_table_config) %>
+        <% if (data_table_config.data.length >= 50){ %>
+
+        <p><small>Viewing first 50 members.</small></p>
+        <% } %>
+<% } else { %>
 <h1>Members</h1>
-<style>
+<p>Please search for your members using the form below. Your result will return up to 50 members.</p>
+<div class="well">
+    <form class="form" id="member_search_form">
+        <table class="table">
+            <thead>
+            <tr>
+                <th width="23%"><input type="checkbox" name="find_by_name" onchange="MEMBER_SEARCH.refresh()"
+                                       checked="checked"/>
+                    Member or Real Name
+                </th>
 
-    #member_list .control .down,
-    #member_list .control .up {
-        display: none;
-    }
+                <th width="23%"><input type="checkbox" name="find_by_role" onchange="MEMBER_SEARCH.refresh()"/>
+                    Role(s)
+                </th>
 
-    #member_list.comp_parent .control .down,
-    #member_list.comp_parent .control .up {
-        display: inline-block;
-        width: 24px;
-    }
+                <th width="23%"><input type="checkbox" name="find_by_task" onchange="MEMBER_SEARCH.refresh()"/>
+                    Task(s)
+                </th>
+                <td width="20%">&nbsp;</td>
+            </tr>
+            </thead>
 
-    #member_list .id_value a {
-        text-decoration: none;
-    }
+            <tbody>
+            <tr>
+                <td>
+                    <span id="name_to_find">
+                        <input type="text" name="name"/>
+                    </span>
+                </td>
 
-    #member_list .id_value .full_id {
-        display: none;
-        float: left;
-        border: 1px solid black;
-        background-color: white;
-        left: 0px;
-        color: black !important;
-    }
+                <td>
+                    <span id="roles_to_find" style="display: none">
 
-    #member_list tfoot .controls button.add {
-        background-color: rgb(204, 255, 204);
-        float: right;
-    }
+                    <% roles.forEach(function(r){ %>
+                    <label>
+                        <input type="checkbox" name="roles"
+                               value="<%= r %>"/> <%= r %>
+                    </label>
+                    <% }) %>
+                    </span>
+                </td>
 
-    form.dialog_form td.roles label {
-        padding: 0px;
-        white-space: nowrap;
-        min-width: 10em;
-        display: inline-block;
-        height: 1em;
-        margin-bottom: 0.5em;
-        text-align: left;
-    }
+                <td>
+                    <span id="tasks_to_find" style="display: none"><% tasks.forEach(function(t){ %>
+                    <label>
+                        <input type="checkbox" name="tasks"
+                               value="<%= t %>"/> <%= t %>
+                        <% }) %>
+                    </label></span>
+                </td>
 
-</style>
-<div id="member_list">
-    <table class="datagrid" style="width: 100%">
-        <thead>
-        <tr>
-            <td colspan="109" class="controls">
-                Search <input type="text" value="" class="search_field"/>
-            </td>
-        </tr>
-        <tr>
-            <th><input type="checkbox" name="members[]" class="check_all" value="all"/></th>
-            <th class="id_sort">ID</th>
-            <th class="member_name_sort">User Name</th>
-            <th class="link_sort">Real Name</th>
-            <th class="parent_sort">Role</th>
-            <th>&nbsp;</th>
-        </tr>
-        </thead>
-        <tbody class="insert">
-        <script id="member_row_template" type="text/x-handlebars-template">
-            <td><input type="checkbox" name="members[]" value="{{ _id }}"/></td>
-            <td class="id_value" id_value="{{ _id }}">
-                <a href="#" title="{{id_display _id }}">{{id_short _id }} </a>
-            </td>
-            <td>
-                {{ member_name }}
-            </td>
-            <td>{{ real_name }}</td>
-            <td>--</td>
+                <td>
+                    <button type="submit" class="btn btn-primary">Find Members</button>
+                </td>
+            </tr>
 
-            <td class="control">
-                <button class="edit"><span class="icon"></span> Edit</button>
-            </td>
-
-        </script>
-        </tbody>
-        <tfoot>
-        <tr>
-            <th>&nbsp;</th>
-            <th class="id_sort">ID</th>
-            <th class="member_name_sort">User Name</th>
-            <th class="link_sort">Real Name</th>
-            <th class="parent_sort">Role</th>
-            <th>&nbsp;</th>
-        </tr>
-        <tr>
-            <td colspan="10" class="controls">
-                <button class="checked">Alter Checked Items...</button>
-
-                <button class="add">Add Member</button>
-                <div class="on_checked" style="display: none">
-                    <button class="delete">Delete</button>
-                </div>
-            </td>
-        </tr>
-        </tfoot>
-    </table>
+            </tbody>
+        </table>
+    </form>
 </div>
 
-<script id="member_add_template" type="text/x-handlebars-template">
-    <form class="dialog_form">
-
-        <table>
-            <tr>
-                <td><label>User Name</label></td>
-                <td><input name="member_name" type="text" value=""/></td>
-            </tr>
-            <tr>
-                <td><label>Real Name</label></td>
-                <td><input name="real_name" type="text" value=""/></td>
-            </tr>
-            <tr>
-                <td><label>Email</label></td>
-                <td><input name="email" type="text" value=""/></td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td>
-                    <button class="new" >Add Menu Item</button>
-                </td>
-            </tr>
-        </table>
-    </form>
-</script>
-
-<script id="edit_member_form" type="text/x-handlebars-template">
-    <form class="dialog_form">
-        <table style="width: 100%">
-            <tr>
-                <td><label>User Name</label></td>
-                <td><input name="member_name" type="text" value="{{ member_name }}"/></td>
-            </tr>
-            <tr>
-                <td><label>Real Name</label></td>
-                <td><input name="real_name" type="text" value="{{ real_name }}"/></td>
-            </tr>
-            <tr>
-                <td><label>Email</label></td>
-                <td><input name="email" type="text" value="{{ email }}"/></td>
-            </tr>
-            <tr>
-                <td><label>Roles</label></td>
-                <td class="roles"></td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td>
-                    <button class="update">Update</button>
-                    <button class="delete">Delete</button>
-                </td>
-            </tr>
-        </table>
-    </form>
-</script>
-
-<span id="add_member">
-</span>
-
-<span id="edit_member">
-</span>
+<div class="well" id="members_list">
+    ...
+</div>
+<% } %>

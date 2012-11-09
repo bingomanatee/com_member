@@ -1,77 +1,60 @@
 var NE = require('nuby-express');
 var mm = NE.deps.support.mongoose_model;
-var mongoose = NE.deps.mongoose;
 var util = require('util');
 var _ = require('underscore');
+var _member_signin = require('member_signin');
+var _member_auth = require('member_auth');
 
-var oauth = new mongoose.Schema({
-    id:String, // note - id, NOT _id - the id in the oauth system.
-    service:{type:String, enum:['twitter', 'facebook']},
-    oauth_token:String,
-    metadata:mongoose.Schema.Types.Mixed
-})
+var model_def = {
+    name:"member",
+    type:"model",
 
-var role_schema = new mongoose.Schema({
-    name:String,
-    tasks:[String]
-});
-
-var schema = new mongoose.Schema({
-    real_name:String,
-    member_name:{type:String, required:true, index:{unique:true}},
-    oauth:[oauth],
-    meta_fields:mongoose.Schema.Types.Mixed, // note - these extra fields defined in fb_meta
-    deleted:{type:Boolean, default:false},
-    location:String,
-    country:String,
-    locale:String,
-    email:String,
-    public_profile:String,
-    private_profile: String,
-    roles:[role_schema],
-    admin_notes:String
-});
-
-schema.statics.active = function (cb) {
-    return this.find('deleted', {'$ne':true}).run(cb);
-}
-
-schema.statics.inactive = function (cb) {
-    return this.find('deleted', true).run(cb);
-}
-
-var _model = mm.create(schema,
-    {name:"member",
-        type:"model",
-        find_oauth:function (service, id, cb) {
-            console.log('finding %s %s', service, id);
-            this.find({'oauth.service':service, 'oauth.id':id }, function (err, members) {
-                console.log('found %s, %s', util.inspect(err), util.inspect(members));
-                if (err) {
-                    cb(err);
-                } else {
-                    var matched_members = _.filter(members, function(m){
-                       var match = false;
-
-                        _.each(m.oauth, function(o){
-                            if (o.service == service && o.id == id){
-                                match = true;
-                            }
-                        });
-                        return match;
-                    })
-
-                    if (matched_members.length){
-                        cb(null, matched_members[0]);
-                    } else {
-                        cb(null, false);
-                    }
-                }
-            })
+    get_member_name:function (name, cb, search) {
+        if (search) {
+            var match = {"$or":[
+                {member_name:new RegExp(name, 'i')},
+                {real_name:new RegExp(name, 'i')}
+            ]}
+        } else {
+            var match = {"$or": [
+                {member_name: name},
+                {real_name: name}]}
         }
+        this.find_one(match, cb);
     }
-);
+}
 
-module.exports = function () {
+_.extend(model_def, _member_signin);
+_.extend(model_def, _member_auth);
+
+var _model;
+
+module.exports = function (mongoose_inject) {
+    if (!_model) {
+
+        if (!mongoose_inject) {
+            mongoose_inject = NE.deps.mongoose;
+        }
+
+        var schema = new mongoose_inject.Schema({
+            real_name:'string',
+            member_name:{type:'string', required:true, index:{unique:true}},
+            pass:'string',
+            meta_fields:mongoose_inject.Schema.Types.Mixed,
+            deleted:{type:Boolean, default:false},
+            location:'string',
+            country:'string',
+            locale:'string',
+            email:'string',
+            public_profile:'string',
+            private_profile:'string',
+            roles:['string'],
+            enc_method:{type:'string', enum:['md5', 'sha1', 'sha256', 'ripemd160']},
+            enc_envelope:{type:'string'},
+            admin_notes:'string'
+        });
+
+        _model = mm.create(schema, model_def, mongoose_inject);
+    }
     return _model;
 }
